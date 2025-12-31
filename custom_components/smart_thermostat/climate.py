@@ -975,6 +975,7 @@ class SmartThermostat(ClimateEntity, RestoreEntity, ABC):
             # It's a state refresh call from keep_alive, just force switch ON.
             _LOGGER.info("%s: Refresh state ON %s", self.entity_id,
                          ", ".join([entity for entity in self.heater_or_cooler_entity]))
+            return  # Device is already ON, skip sending redundant command
         elif time.time() - self._last_heat_cycle_time >= self._min_off_cycle_duration.seconds:
             _LOGGER.info("%s: Turning ON %s", self.entity_id,
                          ", ".join([entity for entity in self.heater_or_cooler_entity]))
@@ -999,6 +1000,7 @@ class SmartThermostat(ClimateEntity, RestoreEntity, ABC):
             # It's a state refresh call from keep_alive, just force switch OFF.
             _LOGGER.info("%s: Refresh state OFF %s", self.entity_id,
                          ", ".join([entity for entity in self.heater_or_cooler_entity]))
+            return  # Device is already OFF, skip sending redundant command
         elif time.time() - self._last_heat_cycle_time >= self._min_on_cycle_duration.seconds or force:
             _LOGGER.info("%s: Turning OFF %s", self.entity_id,
                          ", ".join([entity for entity in self.heater_or_cooler_entity]))
